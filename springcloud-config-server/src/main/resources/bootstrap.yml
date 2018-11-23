@@ -1,0 +1,16 @@
+server:
+  port: 8888
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    statusPageUrlPath: /admin/info
+    healthCheckUrlPath: /admin/health
+    hostname: ${CF_INSTANCE_IP:localhost}
+    nonSecurePort: ${CF_INSTANCE_PORT:${PORT:${server.port:8888}}}
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:1111}/eureka/
+  
+
+    

@@ -1,0 +1,44 @@
+server:
+  port: 8181
+eureka:
+  instance:
+    status-page-url-path: /info
+    health-check-url-path: /health
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
+      
+zuul:
+   add-host-header: true
+   host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
+   routes:
+      user-service:
+         path: /user-service/**
+         serviceId: spring-china-user
+      topic-service:
+         path: /topic-service/**
+         serviceId: spring-china-topic
+      web:
+         path: /**
+         serviceId: spring-china-web
+         sensitiveHeaders: 
+      
+hystrix:
+   command:
+      default:
+         execution:
+            isolation:
+              thread:
+                 timeoutInMilliseconds: 60000
+                 
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 60000
+  
+
+
+         

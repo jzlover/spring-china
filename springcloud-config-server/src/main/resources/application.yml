@@ -1,0 +1,19 @@
+
+spring:
+  application:
+    name: springcloud-config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        svn:
+          uri: https://www.sftti.com/svn/svw-springcloud-config-server/
+          username: jz
+          password: jz6666281886
+        default-label: config
+logging:
+  levels:
+    org.springframework.boot.env.PropertySourcesLoader: TRACE
+    org.springframework.cloud.config.server: DEBUG
+    

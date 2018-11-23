@@ -1,0 +1,40 @@
+server:
+  port: 9105
+eureka:
+  instance:
+    status-page-url-path: /info
+    health-check-url-path: /health
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
+spring:
+   thymeleaf:
+      mode: HTML5
+      encoding: UTF-8
+      content-type: text/html
+      cache: false  
+   redis:
+      host: localhost
+      port: 6379
+hystrix:
+   command:
+      default:
+         execution:
+            isolation:
+              thread:
+                 timeoutInMilliseconds: 15000
+multipart:
+   maxFileSize: 10Mb
+   maxRequestSize: 10Mb
+
+feign:
+   hystrix:
+      enabled: true
+
+upload-pic-path: D://svw-bbs-upload//blog-pic//
+SPRING_CHINA_USER_HOST: http://spring-china-user
+SPRING_CHINA_TOPIC_HOST: http://spring-china-topic
+user-avatar-saved-path: D://svw-bbs-upload//portraits//
+UPLOAD_PATH: D://spring-china-upload
