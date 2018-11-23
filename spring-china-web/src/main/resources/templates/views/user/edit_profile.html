@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout_user_setting">
+<head>
+	<title>编辑个人资料</title>
+	<link rel="stylesheet" th:href="@{/content/css/user_edit_profile.css}"/>
+</head>
+<body>
+    <div layout:fragment="content">
+    	<div class="panel panel-default">
+   			<div class="panel-body">
+				<h2>
+					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+					<span>编辑个人资料</span>					
+				</h2>
+				<hr/>
+				<div class="col-md-6">
+				  <div class="form-group">
+				    <label for="hypocorismName">昵称</label>
+				    <input type="text" class="form-control" id="nickName" disabled="disabled" placeholder="昵称" th:value="${user.nickName}" />
+				  </div>
+				  
+				  <div class="form-group">
+				    <label for="gender">性别</label>
+				    <select class="form-control" id="gender">
+				    	<option value="">未选择</option>				    	
+				    	<option value="1" th:selected="${user.gender==1}">男</option>
+				    	<option value="0" th:selected="${user.gender==0}">女</option>
+				    </select>
+				  </div>
+				  
+				  <div class="form-group">
+				    <label for="signature">自我介绍</label>
+				    <textarea class="form-control" id="signature" placeholder="自我介绍" th:text="${user.signature}"></textarea>
+				  </div>
+				  <button type="button" class="btn btn-primary" id="btn-edit">应用修改</button>
+				</div>
+   			</div>
+   		</div>
+    </div>
+    
+    <div layout:fragment="scripts">
+    	<script th:src="@{/content/js/user_edit_profile.js}"></script>    	
+    	<input id="hidden_userId" type="hidden" th:if="${session.userName!=null}" th:value="${session.userId}"/>
+    </div>
+</body>
+</html>

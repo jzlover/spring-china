@@ -1,0 +1,125 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+  <head>
+  	<title>博客</title>
+  	<link rel="stylesheet" th:href="@{/content/css/topic_show.css}"/>
+  </head>
+  <body>
+      <div layout:fragment="content">
+      	<div class="col-md-3">
+      	   <div class="panel panel-default">
+		      <div class="panel-body">
+		      	<div class="image text-center">
+			        <a href="/" th:href="@{'/user/home?id='+${topic.user.id}}">
+			        	<img alt="头像" th:src="${topic.user.avatarNormal}" class="avatar" style="max-width:100%;"/>
+			        </a>
+			    </div>
+			    <div class="user-name text-center">
+			        <h4>
+			        	<a href="/" th:href="@{'/user/home?id='+${topic.user.id}}" th:text="${topic.user.nickName}"></a>
+			        </h4>
+			    </div>
+			    <div class="user-signature text-center">
+			    	<p th:text="${topic.user.signature}"></p>
+			    </div>
+		      </div>
+		    </div>
+        </div>
+        <div class="col-md-9">     
+      		<div class="panel panel-default">
+      			<div class="panel-body">
+      				 <h1 th:text="${topic.title}" class="text-center topic-title"></h1>
+      				 <div class="tags text-center">
+      				 	<span th:each="tag:${topic.tags}" th:text="${tag.title}" class="badge"></span>
+      				 </div>
+      				 <div class="topic-meta text-center">
+      				 	<span class="glyphicon glyphicon-time" aria-hidden="true"></span> <span th:text="${topic.createdAtFormat}">范菲菲</span>
+      				 	<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <span th:text="${topic.viewCount}">234</span>
+      	  				<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> <span th:text="${topic.likeCount}">22</span>
+      	  				<span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <span th:text="${topic.commentCount}">122</span>     
+      	  				<span th:if="${topic.updatedAt != null}">
+      	  					<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 
+      	  					<span th:text="${#dates.format(topic.updatedAt, 'yyyy-MM-dd hh:mm:ss')}">122</span>
+      	  				</span> 	  		      	  				
+      				 </div>
+      				 
+ 
+      				 <div class="entry-content" th:utext="${topic.contentHtml}"></div>
+      				 <div id="topic-tools" th:if="${mine==true}">
+      				 	<a href="javascript:;" id="edit-topic"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+      				 	<a href="javascript:;" id="del-topic"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+      				 </div>
+      			</div>
+      		</div>
+      		
+      		<div class="panel panel-default">
+      			<div class="panel-body votes-container text-center">
+      				<div class="btn-group btn-group-like">
+      					<button th:if="${session.userName!=null}" type="button" class="btn btn-default btn-topic-like">
+      						<span class="glyphicon glyphicon-thumbs-up topic-like" aria-hidden="true"></span> 
+      						<span th:switch="${topic.liked}">
+      							<span class="val" th:case="null">赞</span>
+      							<span class="val" th:case="false">赞</span>
+      							<span class="val" th:case="true">已赞</span>
+      						</span>
+      					</button>
+      					<button th:if="${session.userName!=null}" type="button" class="btn btn-default btn-topic-dislike">
+      						<span class="glyphicon glyphicon-thumbs-down topic-dislike" aria-hidden="true"></span> 
+      						 
+      					</button>
+      					<button th:if="${session.userName==null}" type="button" class="btn btn-default utils-login"><span class="glyphicon glyphicon-thumbs-up topic-like" aria-hidden="true"></span> 赞</button>
+      					<button th:if="${session.userName==null}" type="button" class="btn btn-default utils-login" ><span class="glyphicon glyphicon-thumbs-down topic-dislike" aria-hidden="true"></span> 踩</button>
+      				</div>
+     				<ul class="voted-users mt-10">
+     				 	<li th:each="l : ${topic.likes}" th:attr="data-id=${l.userId}" th:id="${'voted-u-'+l.userId}">
+     				 		<a href="/user/home/1" th:href="@{'/user/home?id='+${l.userId}}">
+     				 			<img alt="头像" th:src="${l.user.avatarSmall}" class="avatar avatar-small"/>
+     				 		</a>     				 		
+     				 	</li>
+     				</ul>
+      			</div>
+      		</div>
+      		
+      		<div class="panel panel-default">
+      			<div class="panel-heading">
+      				<div class="heading-info">
+      					回复数量：
+      					<span th:text="${topic.commentCount}"></span>
+      				</div>
+      				<div class="heading-order"></div>
+      			</div>
+      			<div class="panel-body topic-comments-container">     
+					<div id="pagination" class="pagination" th:if="${topic.commentCount>0}"></div>				
+      			</div>
+      		</div>
+      		
+      		<div class="panel panel-default">
+      			<div class="panel-body">
+      				<div th:if="${session.userName!=null}" class="form-group">
+    					<textarea class="form-control" placeholder="请输入您的评论..." id="txt-reply"></textarea>
+    					<button type="button" class="btn btn-primary mt-10" id="btn-reply">回复</button>
+    				</div>
+    				<div th:if="${session.userName==null}" class="form-group">    					
+    					<a href="javascript:;" class="utils-login">登录后回复</a>
+    				</div>
+    				
+    				<div id="div-markdown-show"></div>
+      			</div>
+      		</div>
+	      	
+		</div>
+      </div>
+      <div layout:fragment="scripts">
+      	<script th:src="@{/content/js/topic_show.js}"></script>
+      	<input th:if="${session.userName!=null}" id="hidden_userId" type="hidden" th:value="${session.userId}"/>
+    	<input id="hidden_counts" type="hidden" th:value="${topic.commentCount}"/>
+      	<input id="hidden_topicId" type="hidden" th:value="${topic.id}"/>
+      	<input th:if="${session.userName!=null}" id="hidden_liked" type="hidden" th:value="${topic.liked}"/>
+      	<input th:if="${session.userName!=null}" id="hidden_portraitUrl" type="hidden" th:value="${session.avatarSmall}"/>
+      	<input th:if="${session.userName!=null}" id="hidden_nickName" type="hidden" th:value="${session.nickName}"/>
+      	<input id="hidden_cId" type="hidden" th:value="${cId}"/>
+      	<input id="hidden_commentIndex" type="hidden" th:value="${commentIndex}"/>
+      	<input id="hidden_readedType" type="hidden" th:value="${readedType}"/>
+      	<input id="hidden_rId" type="hidden" th:value="${rId}"/>
+      </div>
+  </body>
+</html>

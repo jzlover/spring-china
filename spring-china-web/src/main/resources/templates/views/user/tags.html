@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout_home">
+ <head>
+  	<title>个人中心-标签</title>
+  	<link rel="stylesheet" th:href="@{/content/css/user_tags.css}"/>
+  </head>
+  <body>
+      <div layout:fragment="content">
+        <div class="panel panel-default">
+  		  <div class="panel-heading">
+  		  	<label>我的标签</label>
+  		  	<a href="" th:href="@{/user/home}" class="pull-right">个人中心</a>
+  		  </div>
+	      <div class="panel-body">
+	      	<div id="tag-tools">
+	      		<button class="btn btn-primary btn-xs pull-right" id="btn-add-user">添加</button>
+	      		<div class="clearfix"></div>
+	      	</div>
+			<table class="table table-hover" id="tb-user-tags">
+				<thead>
+					<tr>
+						<th>标签名称</th>
+						<th>标签说明</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+	      </div>
+	    </div>
+      </div>
+      
+      <div layout:fragment="scripts">
+      	<script th:src="@{/content/js/user_tags.js}"></script>
+      	<input id="hidden_userId" type="hidden" th:value="${user.id}"/>
+
+      </div>
+  </body>
+</html>

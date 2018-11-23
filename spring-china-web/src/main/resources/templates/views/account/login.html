@@ -1,0 +1,40 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="layout">
+<head>
+    <title>用户登录</title>
+    <link rel="stylesheet" th:href="@{/content/css/account_login.css}"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body" id="login-form">
+                <div class="text-center">
+                    <label>欢迎加入Spring-China社区论坛</label>
+                </div>
+                <div class="form-group">
+                    <label for="userName">用户名</label>
+                    <input type="text" class="form-control" id="userName" placeholder="用户名"/>
+                    <p id="userName-err" class="err hidden mb-5"></p>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" class="form-control" id="password" placeholder="密码"/>
+                    <p id="password-err" class="err hidden mb-5"></p>
+                </div>
+                <div class="form-group">
+                	<a href="https://open.weixin.qq.com/connect/qrconnect?appid=wx60dfcd85bdcd3b0e&amp;redirect_uri=http://beta.spring-china.org/account/wx-login&amp;response_type=code&amp;scope=snsapi_login&amp;state=STATE#wechat_redirect" id="a-wx-login" class="btn btn-info btn-u">扫码登录</a>
+                    <button type="button" id="btn-reg" class="btn btn-primary btn-u">登录</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+<div layout:fragment="scripts">
+    <script th:src="@{/content/js/account_login.js}"></script>
+</div>
+</body>
+</html>

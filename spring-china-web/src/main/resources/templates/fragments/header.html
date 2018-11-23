@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+ 
+   	 <div th:fragment="header" class="navbar navbar-default">   
+   	 	<div class="container">
+   	 	
+  	 	<div class="navbar-header">
+	   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
+	     <span class="sr-only">Toggle navigation</span>
+	     <span class="icon-bar"></span>
+	     <span class="icon-bar"></span>
+	     <span class="icon-bar"></span>
+	   </button>
+	   <a class="navbar-brand" href="">
+
+      </a>
+    </div>
+		<div class="navbar-collapse collapse" id="navbar-main" role="navigation">
+                   
+          <ul class="nav navbar-nav">
+  			<li th:classappend="${viewName=='topics'}? 'active'"><a href="/topics">社区</a></li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+          		<li th:if="${session.userName!=null}">
+          			<a th:if="${session.commentUnReadedCount>0}" href="/user/msg-comment?show_type=1">
+          				消息 <span id="nav-msg-comment-count" th:text="${session.commentUnReadedCount}" class="badge"></span>
+          			</a>         			
+          		</li>
+     			<li th:if="${session.userName!=null}">
+                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">      
+                   		<img alt="头像" class="avatar" style="width:20px;height:20px;" th:src="${session.avatarSmall}"/>            			
+                   		<span th:utext="${session.nickName}"></span> <span class="caret"></span>
+                   </a>
+                   <ul class="dropdown-menu" role="menu">
+                   	  <li><a href="/topic/create">发布话题</a></li>
+                   	  <li><a href="/user/home">个人中心</a></li>
+                      <li><a href="/p/helper">帮助</a></li>
+                      <li class="divider"></li>
+                      <li><a href="/logout">退出</a></li>
+                   </ul>
+               </li>
+               <li th:if="${session.userName==null}">
+               	<a href="/account/login">登录</a>
+               </li>
+               <li th:if="${session.userName==null}">
+               	<a href="https://open.weixin.qq.com/connect/qrconnect?appid=wx60dfcd85bdcd3b0e&amp;redirect_uri=http://beta.spring-china.org/account/wx-register&amp;response_type=code&amp;scope=snsapi_login&amp;state=STATE#wechat_redirect">注册</a>
+               </li>
+
+          </ul>
+      </div>
+      </div>
+   	 </div>
+ 
+</body>
+</html>

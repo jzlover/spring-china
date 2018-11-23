@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace：必须与对应的接口全类名一致
+    id:必须与对应接口的某个对应的方法名一致
+
+ -->
+
+
+
+<mapper namespace="org.spring.china.user.mapper.UserMapper">
+
+	<resultMap type="org.spring.china.base.pojo.Topic" id="rmTopic">
+        <id property="id" column="topic_id"/>
+        <result property="createdAt" column="topic_createdAt"/>
+        <result property="updatedAt" column="topic_updatedAt"/>
+        <result property="categoryId" column="topic_categoryId"/>
+        <result property="userId" column="topic_userId"/>
+        <result property="title" column="topic_title"/>
+        <result property="content" column="topic_content"/>
+        <result property="status" column="topic_status"/>
+        <result property="isTop" column="topic_isTop"/>
+        <result property="viewCount" column="topic_viewCount"/>
+        <result property="contentHtml" column="topic_contentHtml"/>
+        <result property="isDigest" column="topic_isDigest"/>
+        <result property="likeCount" column="topic_likeCount"/>
+        <result property="commentCount" column="topic_commentCount"/>
+
+        <association property="user" column="topic_userId" javaType="org.spring.china.base.pojo.User">
+            <id property="id" column="topic_userId"/>
+            <result property="nickName" column="user_nickName"/>
+            <result property="avatar" column="user_avatar"/>
+            <result property="signature" column="user_signature"/>
+        </association>
+        
+        <association property="category" column="topic_categoryId" javaType="org.spring.china.base.pojo.Category">
+            <id property="id" column="topic_categoryId"/>
+            <result property="name" column="category_name"/>
+            <result property="description" column="category_description"/>
+            <result property="code" column="category_code"/>
+        </association>
+        
+        <collection property="tags" ofType="org.spring.china.base.pojo.Tag">
+            <id property="id" column="tag_id"/>
+            <result property="createdAt" column="tag_createdAt"/>
+            <result property="updatedAt" column="tag_updatedAt"/>
+            <result property="userId" column="tag_userId"/>
+            <result property="title" column="tag_title"/>
+            <result property="status" column="tag_status"/>
+            <result property="description" column="tag_description"/>
+            <association property="user" column="tag_userId" javaType="org.spring.china.base.pojo.User">
+                <id property="id" column="tag_userId"/>
+                <result property="avatar" column="tag_user_avatar"/>
+                <result property="nickName" column="tag_user_nickName"/>
+            </association>
+        </collection>
+    </resultMap>
+    
+	<resultMap type="org.spring.china.base.pojo.User" id="rmUser">
+		<id property="id" column="user_id"/>
+		<result property="gender" column="user_gender"/>
+		<result property="nickName" column="user_nickName"/>
+		<result property="avatar" column="user_avatar"/>
+		<result property="password" column="user_password"/>
+		<result property="passwordSalt" column="user_passwordSalt"/>
+		<result property="signature" column="user_signature"/>
+		<result property="userName" column="user_userName"/>
+		<result property="updatedAt" column="user_updatedAt"/>
+		<result property="createdAt" column="user_createdAt"/>
+		<result property="unReadedMsgCount" column="unReadedMsgCount"/>
+		<result property="wxId" column="user_wxId"/>
+		<collection property="roles" column="role_userId" ofType="org.spring.china.base.pojo.UserRole">
+			<id property="id" column="role_id"/>
+			<result property="roleName" column="role_roleName"/>
+			<result property="createdAt" column="role_createdAt"/>
+			<result property="updatedAt" column="role_updatedAt"/>
+			<result property="userId" column="role_userId"/>			
+		</collection>
+	</resultMap>
+	
+	<resultMap type="org.spring.china.base.pojo.UserMsg" id="rmUserMsg">
+		<id property="id" column="usermsg_id"/>
+		<result property="senderUserId" column="usermsg_senderUserId"/>
+		<result property="toUserId" column="usermsg_toUserId"/>
+		<result property="type" column="usermsg_type"/>
+		<result property="content" column="usermsg_content"/>
+		<result property="contentHtml" column="usermsg_contentHtml"/>
+		<result property="createdAt" column="usermsg_createdAt"/>
+		<result property="updatedAt" column="usermsg_updatedAt"/>
+		<association property="senderUser" column="usermsg_senderUserId" javaType="org.spring.china.base.pojo.User">
+            <id property="id" column="usermsg_senderUserId"/>
+            <result property="nickName" column="user_s_nickName"/>
+            <result property="avatar" column="user_s_avatar"/>
+            <result property="signature" column="user_s_signature"/>
+        </association>
+        <association property="toUser" column="usermsg_toUserId" javaType="org.spring.china.base.pojo.User">
+            <id property="id" column="usermsg_toUserId"/>
+            <result property="nickName" column="user_t_nickName"/>
+            <result property="avatar" column="user_t_avatar"/>
+            <result property="signature" column="user_t_signature"/>
+        </association>
+	</resultMap>
+
+	<resultMap id="rmTag" type="org.spring.china.base.pojo.Tag">
+		<id property="id" column="tag_id"/>
+		<result property="createdAt" column="tag_createdAt"/>
+		<result property="updatedAt" column="tag_updatedAt"/>
+		<result property="title" column="tag_title"/>
+		<result property="userId" column="tag_userId"/>
+		<result property="status" column="tag_status"/>
+		<result property="description" column="tag_description"/>
+
+		<association property="user" column="tag_userId" javaType="org.spring.china.base.pojo.User">
+			<id property="id" column="tag_userId"/>
+			<result property="nickName" column="user_nickName"/>
+			<result property="avatar" column="user_avatar"/>
+			<result property="signature" column="user_signature"/>
+		</association>
+
+		<collection property="topics" ofType="org.spring.china.base.pojo.Topic">
+			<id property="id" column="topic_id"/>
+			<result property="createdAt" column="topic_createdAt"/>
+			<result property="updatedAt" column="topic_updatedAt"/>
+			<result property="categoryId" column="topic_categoryId"/>
+			<result property="userId" column="topic_userId"/>
+			<result property="title" column="topic_title"/>
+			<result property="content" column="topic_content"/>
+			<result property="status" column="topic_status"/>
+			<result property="isTop" column="topic_isTop"/>
+			<result property="viewCount" column="topic_viewCount"/>
+			<result property="contentHtml" column="topic_contentHtml"/>
+			<result property="isDigest" column="topic_isDigest"/>
+			<result property="likeCount" column="topic_likeCount"/>
+			<result property="commentCount" column="topic_commentCount"/>
+			<result property="liked" column="topic_liked"/>
+		</collection>
+	</resultMap>
+	
+    <select id="queryUserById" parameterType="Map" resultMap="rmUser">
+        <![CDATA[
+            select
+            u.id as user_id,
+            u.gender as user_gender,
+            u.nickName as user_nickName,
+            u.avatar as user_avatar,
+            u.password as user_password,
+            u.passwordSalt as user_passwordSalt,
+            u.signature as user_signature,
+            u.userName as user_userName,
+            u.updatedAt as user_updatedAt,
+            u.createdAt as user_createdAt,
+            u.wxId as user_wxId,
+            ur.id as role_id,
+            ur.createdAt as role_createdAt,
+            ur.updatedAt as role_updatedAt,
+            ur.roleName as role_roleName,
+            ur.userId as role_userId
+            from user u
+            join user_role ur
+            on(ur.userId=u.id)
+            where u.id=#{id}
+         ]]>
+    </select>
+
+
+
+    <insert id="regUser" parameterType="org.spring.china.base.pojo.User" useGeneratedKeys="true" keyProperty="id">
+    	<![CDATA[
+	    	insert into user (userName, nickName,password,passwordSalt,wxId) values (#{userName},#{nickName},#{password},#{passwordSalt},#{wxId})
+	    ]]>
+    </insert>
+    
+    <insert id="saveUserRole" parameterType="org.spring.china.base.pojo.UserRole" useGeneratedKeys="true" keyProperty="id">
+    	<![CDATA[
+	    	insert into user_role(userId,roleName) values (#{userId},#{roleName})
+	    ]]>
+    </insert>
+    
+    <select id="checkUserNameExist" parameterType="Map" resultType="java.lang.Integer">
+    	<![CDATA[
+	    	select count(*) from user where userName = #{userName}
+	    ]]>
+    </select>
+    
+    <select id="checkNickNameExist" parameterType="Map" resultType="java.lang.Integer">
+    	<![CDATA[
+	    	select count(*) from user where nickName = #{nickName}
+	    ]]>
+    </select>
+    
+    <select id="queryUserByUserName" parameterType="Map" resultMap="rmUser">
+        <![CDATA[
+            select
+            u.id as user_id,
+            u.gender as user_gender,
+            u.nickName as user_nickName,
+            u.avatar as user_avatar,
+            u.password as user_password,
+            u.passwordSalt as user_passwordSalt,
+            u.signature as user_signature,
+            u.userName as user_userName,
+            u.updatedAt as user_updatedAt,
+            u.createdAt as user_createdAt,
+            u.wxId as user_wxId,
+            ur.id as role_id,
+            ur.createdAt as role_createdAt,
+            ur.updatedAt as role_updatedAt,
+            ur.roleName as role_roleName,
+            ur.userId as role_userId
+            from user u
+            join user_role ur
+            on(ur.userId=u.id)
+            where u.userName=#{userName}
+         ]]>
+    </select>
+    
+    <update id="editUserProfile" parameterType="org.spring.china.base.pojo.User">
+    	update user set
+    	<if test="nickName != null">
+    		nickName=#{nickName},
+    	</if>
+    		gender=#{gender},
+    		signature=#{signature},
+    		updatedAt = #{updatedAt}
+    		where id=#{id}
+    </update>
+
+	<update id="editUserAvatar" parameterType="org.spring.china.base.pojo.User">
+		update user set
+		<if test="avatar != null">
+			avatar=#{avatar},
+		</if>	
+			updatedAt=#{updatedAt}
+			where id=#{id}
+	</update>
+	
+	<select id="queryUserTopicsPagely" parameterType="Map" resultMap="rmTopic">
+		select 
+		t.id as topic_id,
+		t.createdAt as topic_createdAt,
+		t.updatedAt as topic_updatedAt,
+		t.categoryId as topic_categoryId,
+		t.userId as topic_userId,
+		t.title as topic_title,
+		t.content as topic_content,
+		t.contentHtml as topic_contentHtml,
+		t.status as topic_status,
+		t.isTop as topic_isTop,
+		t.viewCount as topic_viewCount,
+		t.isDigest as topic_isDigest,
+		t.likeCount as topic_likeCount,
+		t.commentCount as topic_commentCount,
+		u.id as user_id,
+		u.nickName as user_nickName,
+		u.avatar as user_avatar,
+		c.name as category_name,
+		c.description as category_description,
+		c.code as category_code,
+		tg.id as tag_id,
+        tg.userId as tag_userId,
+        tg.status as tag_status,
+        tg.createdAt as tag_createdAt,
+        tg.updatedAt as tag_updatedAt,
+        tg.title as tag_title,
+        tg.description as tag_description
+		from topic t
+		join user u
+		on(u.id=t.userId)
+		join category c
+		on(c.id=t.categoryId)
+		left join tag_topic_rel ttr
+        on(t.id=ttr.topicId)
+        left join tag tg
+        on (ttr.tagId=tg.id and tg.status=1)
+        left join user tgu
+        on(tg.userId=tgu.id)
+		where t.userId=#{id}
+		<if test="status != null">
+			and t.status=#{status}
+		</if>
+		<if test="categoryId != null">
+			and t.categoryId=#{categoryId}
+		</if>
+		<if test="tagId != null">
+			and tg.id=#{tagId}
+		</if>
+		order by t.createdAt desc
+		limit ${(page-1)*pageSize},${pageSize}
+	</select>
+	
+	<select id="queryUserTopicCounts" parameterType="Map" resultType="int">
+		select count(*) from topic t
+		where t.userId=#{id}
+		<if test="status != null">
+			and t.status=#{status}
+		</if>
+		<if test="categoryId != null">
+			and t.categoryId=#{categoryId}
+		</if>
+	</select>
+	
+	<select id="checkUserLoginedWX" parameterType="Map" resultType="java.lang.Integer">		
+		<![CDATA[
+	    	select count(*) from user where wxId = #{wxId}
+	    ]]>
+	</select>
+	
+	
+	<select id="queryUserByWxId" parameterType="Map" resultMap="rmUser">
+		<![CDATA[
+            select
+            u.id as user_id,
+            u.gender as user_gender,
+            u.nickName as user_nickName,
+            u.avatar as user_avatar,
+            u.password as user_password,
+            u.passwordSalt as user_passwordSalt,
+            u.signature as user_signature,
+            u.userName as user_userName,
+            u.updatedAt as user_updatedAt,
+            u.createdAt as user_createdAt,
+            u.wxId as user_wxId,
+            ur.id as role_id,
+            ur.createdAt as role_createdAt,
+            ur.updatedAt as role_updatedAt,
+            ur.roleName as role_roleName,
+            ur.userId as role_userId
+            from user u
+            join user_role ur
+            on(ur.userId=u.id)
+            where u.wxId=#{wxId}
+         ]]>
+	</select>
+	
+	<select id="queryUserRecentActivitiesPagely" parameterType="Map" resultType="org.spring.china.base.result.UserRecentActivity">
+		select *
+    	from(
+	    	select 
+	    	1 as type,
+	    	t.title,
+	    	t.id,
+	    	t.userId,
+	    	0 as pId,
+	    	(select nickName from user where id=t.userId) as nickName,
+	    	tc.contentHtml,
+	    	tc.createdAt
+	    	from topic_comment tc
+	    	join topic t	    	
+	    	on(tc.topicId=t.id)
+			where tc.userId=#{userId}
+
+			union all
+				
+			select 
+	    	2 as type,
+	    	t.title,
+	    	t.id,
+	    	t.userId,
+	    	0 as pId,
+	    	(select nickName from user where id=t.userId) as nickName,
+	    	'' as contentHtml,
+	    	tl.createdAt
+	    	from topic_like tl
+	    	join topic t	    	
+	    	on(tl.topicId=t.id)
+			where tl.userId=#{userId}
+			
+			union all
+			
+			select 
+	    	3 as type,
+	    	tc.contentHtml as title,
+	    	tc.id,
+	    	tc.userId,
+	    	tc.topicId as pId,
+	    	(select nickName from user where id=tc.userId) as nickName,
+	    	'' as contentHtml,
+	    	tcl.createdAt
+	    	from topic_comment_like tcl
+	    	join topic_comment tc	    	
+	    	on(tc.id=tcl.commentId)
+			where tcl.userId=#{userId}
+		) A
+		<where>
+			<if test="prevDate != null">
+				<![CDATA[
+				A.createdAt < #{prevDate}
+				]]>
+			</if>
+		</where>
+		order by A.createdAt desc
+		limit ${(page-1)*pageSize},${pageSize}
+	</select>
+	
+	<select id="queryUserRecentActivitiesCounts" parameterType="Map" resultType="int">
+		select count(*) 
+		from(
+			select 
+	    	t.id
+	    	from topic_comment tc
+	    	join topic t	    	
+	    	on(tc.topicId=t.id)
+			where tc.userId=#{userId}
+
+			union all
+				
+			select 
+	    	t.id
+	    	from topic_like tl
+	    	join topic t	    	
+	    	on(tl.topicId=t.id)
+			where tl.userId=#{userId}
+			
+			union all
+			
+			select 
+	    	tc.id
+	    	from topic_comment_like tcl
+	    	join topic_comment tc	    	
+	    	on(tc.id=tcl.commentId)
+			where tcl.userId=#{userId}
+		) A
+	</select>
+	
+	<select id="queryUserCommentReadedCount" parameterType="Map" resultType="int">
+    	select
+		(
+			select count(*)
+			from topic t
+			join topic_comment tc
+			on(tc.topicId=t.id)
+			where t.userId=#{userId} and tc.userId!=#{userId}
+			<if test="readed !=null">
+				and tc.readed=#{readed}
+			</if>
+		)
+		+
+		(
+			select count(*)
+			from topic_comment_to tct
+			join topic_comment tc1
+			on(tc1.id=tct.commentId)
+			where tc1.userId!=#{userId} and tct.userId=#{userId} 
+			<if test="readed !=null">
+				and tct.readed=#{readed}
+			</if>
+		)
+		+
+		(
+			select count(*)
+			from topic t
+			join topic_like tl
+			on(tl.topicId=t.id)
+			where t.userId=#{userId} and tl.userId!=#{userId}
+			<if test="readed !=null">
+				and tl.readed=#{readed}
+			</if>	
+		)
+		+
+		(
+			select count(*)
+			from topic_comment_like tcl
+			join topic_comment tc
+			on(tc.id=tcl.commentId)
+			join topic t
+			on(t.id=tc.topicId)
+			where tc.userId=#{userId} and tcl.userId!=#{userId}
+			<if test="readed !=null">
+				and tcl.readed=#{readed}
+			</if>
+		)
+    </select>
+    
+    <select id="queryUserCommentReaded" parameterType="Map" resultType="org.spring.china.base.result.UserRelatedComment">   
+    	select *
+    	from(
+	    	select 
+	    	1 as type,
+	    	t.title,
+	    	t.id,
+	    	tc.userId,
+	    	tc.id as cId,
+	    	tc.id as rId,
+	    	(select nickName from user where id=tc.userId) as nickName,
+	    	tc.contentHtml,
+	    	tc.createdAt,
+	    	tc.readed
+	    	from topic t
+	    	join topic_comment tc
+	    	on(tc.topicId=t.id)
+			where t.userId=#{userId} and tc.userId!=#{userId}
+			<if test="readed !=null">
+				and tc.readed=#{readed}
+			</if>	
+				
+			union all
+				
+			select 
+			2 as type,
+			t.title,
+			t.id,
+			tc.userId,
+			tc.id as cId,
+			tct.id as rId,
+			(select nickName from user where id=tc.userId) as nickName,
+			tc.contentHtml,
+			tc.createdAt,
+			tct.readed
+			from topic_comment_to tct
+			join topic_comment tc
+			on(tc.id=tct.commentId)
+			join topic t
+			on(t.id=tc.topicId)
+			where tc.userId!=#{userId} and tct.userId=#{userId} 
+			<if test="readed !=null">
+				and tct.readed=#{readed}
+			</if>
+			
+			union all
+			
+			select
+			3 as type,
+			t.title,
+			t.id,
+			tl.userId,
+			tl.id as cId,
+			tl.id as rId,
+			(select nickName from user where id=tl.userId) as nickName,
+	    	'' as contentHtml,
+	    	tl.createdAt,
+	    	tl.readed
+			from topic t
+			join topic_like tl
+			on(tl.topicId=t.id)
+			where t.userId=#{userId} and tl.userId!=#{userId}
+			<if test="readed !=null">
+				and tl.readed=#{readed}
+			</if>	
+			
+			union all
+			
+			select 
+			4 as type,
+			t.title,
+			t.id,
+			tcl.userId,
+			tc.id as cId,
+			tcl.id as rId,
+			(select nickName from user where id=tcl.userId) as nickName,
+	    	tc.contentHtml as contentHtml,
+	    	tcl.createdAt,
+	    	tcl.readed
+			from topic_comment_like tcl
+			join topic_comment tc
+			on(tc.id=tcl.commentId)
+			join topic t
+			on(t.id=tc.topicId)
+			where tc.userId=#{userId} and tcl.userId!=#{userId}
+			<if test="readed !=null">
+				and tcl.readed=#{readed}
+			</if>
+		) A
+		order by A.createdAt desc
+		limit ${(page-1)*pageSize},${pageSize}
+    </select>
+    
+    <insert id="addUserMsg" parameterType="org.spring.china.base.pojo.UserMsg" useGeneratedKeys="true" keyProperty="id">
+    	insert into user_msg(senderUserId,toUserId,type,content,contentHtml)values(#{senderUserId},#{toUserId},#{type},#{content},#{contentHtml})
+    </insert>
+    
+    <select id="queryUserMsgPagely" parameterType="Map" resultMap="rmUserMsg">
+    	select
+    	um.id as usermsg_id,
+    	um.type as usermsg_type,
+    	um.content as usermsg_content,
+    	um.contentHtml as usermsg_contentHtml,
+    	um.createdAt as usermsg_createdAt,
+    	um.updatedAt as usermsg_updatedAt,
+    	um.senderUserId as usermsg_senderUserId,
+    	um.toUserId as usermsg_toUserId,
+    	u1.nickName as user_s_nickName,
+    	u1.avatar as user_s_avatar,
+    	u1.signature as user_s_signature,
+    	u2.nickName as user_t_nickName,
+    	u2.avatar as user_t_avatar,
+    	u2.signature as user_t_signature
+    	from user_msg um
+    	join user u1
+    	on(u1.id=um.senderUserId)
+    	join user u2
+    	on(u2.id=um.toUserId)
+    	where um.toUserId=#{userId}
+    	<if test="senderUserId !=null">
+    		and um.senderUserId=#{senderUserId}
+    	</if>
+    	<if test="type !=null">
+	  		and um.type=#{type}
+	  	</if>
+    	<if test="readed !=null">
+	  		and um.readed=#{readed}
+	  	</if>
+    	order by um.createdAt desc
+		limit ${(page-1)*pageSize},${pageSize}
+    </select>
+    
+    <select id="queryUserMsgCount" parameterType="Map" resultType="int">
+    	select count(*)
+    	from user_msg um
+    	where um.toUserId=#{userId}
+    	<if test="type !=null">
+	  		and um.type=#{type}
+	  	</if>
+    	<if test="senderUserId !=null">
+    		and um.senderUserId=#{senderUserId}
+    	</if>
+    	<if test="readed !=null">
+	  		and um.readed=#{readed}
+	  	</if>
+    </select>
+    
+    <select id="queryUserMsgHistory" parameterType="Map" resultMap="rmUserMsg">    	 	  
+    	select
+    	um.id as usermsg_id,
+    	um.type as usermsg_type,
+    	um.content as usermsg_content,
+    	um.contentHtml as usermsg_contentHtml,
+    	um.createdAt as usermsg_createdAt,
+    	um.updatedAt as usermsg_updatedAt,
+    	um.senderUserId as usermsg_senderUserId,
+    	um.toUserId as usermsg_toUserId,
+    	u1.nickName as user_s_nickName,
+    	u1.avatar as user_s_avatar,
+    	u1.signature as user_s_signature,
+    	u2.nickName as user_t_nickName,
+    	u2.avatar as user_t_avatar,
+    	u2.signature as user_t_signature
+    	from user_msg um
+    	join user u1
+    	on(u1.id=um.senderUserId)
+    	join user u2
+    	on(u2.id=um.toUserId)
+    	where ((um.toUserId=#{toUserId} and um.senderUserId=#{senderUserId}) or (um.toUserId=#{senderUserId} and um.senderUserId=#{toUserId}))
+    	<if test="readed !=null">
+	  		and um.readed=#{readed}
+	  	</if>
+	  	<if test="type !=null">
+	  		and um.type=#{type}
+	  	</if>
+	  	<![CDATA[	  
+	  		and um.createdAt < #{prevDate}	  	
+	  	]]>
+    	order by um.createdAt desc
+		limit 0,${perCount}  
+		
+    </select>
+    
+    <select id="queryMsgToMeUsersPagely" parameterType="Map" resultMap="rmUser">
+    	select
+        u.id as user_id,
+        u.gender as user_gender,
+        u.nickName as user_nickName,
+        u.avatar as user_avatar,
+        u.signature as user_signature,
+        u.userName as user_userName,
+        max(um.createdAt) as um_createdAt,
+        (count(u.id)- SUM(um.readed)) as unReadedMsgCount
+        from user u
+        join user_msg um
+        on(um.senderUserId=u.id)
+        where um.toUserId=#{toUserId}
+        <if test="type !=null">
+	  		and um.type=#{type}
+	  	</if>
+        <if test="readed !=null">
+        	and um.readed=#{readed}
+        </if>
+        group by u.id
+        order by um_createdAt desc
+        limit ${(page-1)*pageSize},${pageSize}
+    </select>
+    
+    <select id="queryMsgToMeUsersCount" parameterType="Map" resultType="int">
+    	select count(*) from
+    	(
+	    	select 
+	    	um.senderUserId
+	    	from user_msg um
+	    	where um.toUserId=#{toUserId}
+	    	<if test="type !=null">
+		  		and um.type=#{type}
+		  	</if>
+	        <if test="readed !=null">
+	        	and um.readed=#{readed}
+	        </if>
+	        group by um.senderUserId
+        ) A
+    </select>
+    
+    <select id="queryRemainUserMsgHistoryCount" parameterType="Map" resultType="int">
+    	select count(*)
+    	from user_msg um
+    	where ((um.toUserId=#{toUserId} and um.senderUserId=#{senderUserId}) or (um.toUserId=#{senderUserId} and um.senderUserId=#{toUserId}))
+    	<if test="type !=null">
+	  		and um.type=#{type}
+	  	</if>
+    	<if test="readed !=null">
+	  		and um.readed=#{readed}
+	  	</if>
+	  	<![CDATA[	  
+	  		and um.createdAt < #{prevDate}	  	
+	  	]]>
+    	order by um.createdAt desc
+    </select>
+    
+    <update id="editUserMsgReaded" parameterType="Map">
+    	update user_msg
+    	set readed=#{readed}
+    	where id=#{id}
+    </update>
+    
+    <select id="checkUserMsgToMe" parameterType="Map" resultType="int">
+    	select count(*) from user_msg where id=#{id} and toUserId=#{userId}
+    </select>
+    
+    <select id="checkUserMsgReaded" parameterType="Map" resultType="int">
+    	select count(*) from user_msg where id=#{id} and readed=#{readed}
+    </select>
+
+	<select id="queryUserTagsPagely" parameterType="Map" resultMap="rmTag">
+		select
+		tg.id as tag_id,
+		tg.createdAt as tag_createdAt,
+		tg.updatedAt as tag_updatedAt,
+		tg.userId as tag_userId,
+		tg.title as tag_title,
+		tg.status as tag_status,
+		tg.description as tag_description,
+		u.nickName as user_nickName,
+		u.avatar as user_avatar,
+		u.signature as user_signature
+		from tag tg
+		join user u
+		on(tg.userId=u.id)
+		where tg.userId	=#{userId} and tg.status=1
+		order by tg.createdAt desc
+		limit ${(page-1)*pageSize},${pageSize}
+	</select>
+
+	<select id="queryUserTagsCount" parameterType="Map" resultType="int">
+		select count(*)
+		from tag tg
+		where tg.userId=#{userId} and tg.status=1
+	</select>
+
+	<update id="updateUserTagStatus" parameterType="Map">
+        <![CDATA[
+  		  update tag 
+  		  set status=#{status}
+  		  where id=#{id} and userId=#{userId}
+  	    ]]>
+    </update>
+    
+    <insert id="addTag" parameterType="org.spring.china.base.pojo.Tag" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[
+  		insert into tag(userId,title,description) values(#{userId}, #{title},#{description})
+  	    ]]>
+    </insert>
+    
+    <update id="editTag" parameterType="org.spring.china.base.pojo.Tag">
+    	<![CDATA[
+  			update tag
+  			set title=#{title},
+  			description = #{description}
+  			where id=#{id} and userId=#{userId}
+  	    ]]>
+    </update>
+    
+    <select id="queryUserTags" parameterType="Map" resultType="org.spring.china.base.pojo.Tag">
+		select 
+		tg.*
+		<if test="topicId!=null">
+			,(select count(*) from tag_topic_rel where tagId=tg.id and topicId=#{topicId}) as selected
+		</if>		
+		from tag tg
+		where tg.status=1 and tg.userId=#{userId}
+		order by tg.createdAt desc
+	</select>
+	
+	<select id="queryTagById" parameterType="Map" resultType="org.spring.china.base.pojo.Tag">
+		select * from tag
+		where id=#{id}
+	</select>
+
+ 	<select id="queryTagsPagely" parameterType="Map" resultMap="rmTag">
+ 		select
+		tg.id as tag_id,
+		tg.createdAt as tag_createdAt,
+		tg.updatedAt as tag_updatedAt,
+		tg.userId as tag_userId,
+		tg.title as tag_title,
+		tg.status as tag_status,
+		tg.description as tag_description,
+		u.nickName as user_nickName,
+		u.avatar as user_avatar,
+		u.signature as user_signature,
+		(select sum(t.viewCount) from topic t 
+			join tag_topic_rel ttr
+			on(t.id=ttr.topicId)
+			where ttr.tagId=tg.id) as tagViewCount
+		from tag tg
+		join user u
+		on(tg.userId=u.id)
+		where tg.status=1
+		order by 
+	  	tagViewCount desc,
+		tg.createdAt desc
+		limit ${(page-1)*pageSize},${pageSize}
+ 	</select>
+ 	
+ 	<update id="editUserWxId" parameterType="Map">
+ 		update user
+ 		set wxId = #{wxId}
+ 		where id=#{userId}
+ 	</update>
+</mapper>

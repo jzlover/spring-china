@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace：必须与对应的接口全类名一致
+    id:必须与对应接口的某个对应的方法名一致
+
+ -->
+
+<mapper namespace="org.spring.china.topic.mapper.TopicMapper">
+
+    <resultMap type="org.spring.china.base.pojo.Topic" id="rmTopic">
+        <id property="id" column="topic_id"/>
+        <result property="createdAt" column="topic_createdAt"/>
+        <result property="updatedAt" column="topic_updatedAt"/>
+        <result property="categoryId" column="topic_categoryId"/>
+        <result property="userId" column="topic_userId"/>
+        <result property="title" column="topic_title"/>
+        <result property="content" column="topic_content"/>
+        <result property="status" column="topic_status"/>
+        <result property="isTop" column="topic_isTop"/>
+        <result property="viewCount" column="topic_viewCount"/>
+        <result property="contentHtml" column="topic_contentHtml"/>
+        <result property="isDigest" column="topic_isDigest"/>
+        <result property="likeCount" column="topic_likeCount"/>
+        <result property="commentCount" column="topic_commentCount"/>
+        <result property="liked" column="topic_liked"/>
+
+        <association property="user" column="topic_userId" javaType="org.spring.china.base.pojo.User">
+            <id property="id" column="topic_userId"/>
+            <result property="nickName" column="user_nickName"/>
+            <result property="avatar" column="user_avatar"/>
+            <result property="signature" column="user_signature"/>
+        </association>
+        
+        <association property="category" column="topic_categoryId" javaType="org.spring.china.base.pojo.Category">
+            <id property="id" column="topic_categoryId"/>
+            <result property="name" column="category_name"/>
+            <result property="code" column="category_code"/>
+            <result property="description" column="category_description"/>
+        </association>
+        
+        <collection property="likes" column="topic_id" select="selectLikes"/>
+
+        <collection property="tags" column="topic_id" select="selectTags"/>
+
+    </resultMap>
+    
+    <resultMap type="org.spring.china.base.pojo.TopicComment" id="rmTopicComment">
+    	<id property="id" column="tc_id"/>
+    	<result property="createdAt" column="tc_createdAt"/>
+    	<result property="updatedAt" column="tc_updatedAt"/>
+    	<result property="userId" column="tc_userId"/>
+    	<result property="topicId" column="tc_topicId"/>
+    	<result property="content" column="tc_content"/>
+    	<result property="contentHtml" column="tc_contentHtml"/>
+    	<result property="isTop" column="tc_isTop"/>
+    	<result property="likeCount" column="tc_likeCount"/>
+    	<result property="status" column="tc_status"/>
+    	<result property="liked" column="tc_liked"/>
+    	<association property="user" column="tc_userId" javaType="org.spring.china.base.pojo.User">
+    		<id property="id" column="tc_userId"/>
+    		<result property="avatar" column="user_avatar"/>
+    		<result property="nickName" column="user_nickName"/>
+    	</association>
+    	
+    	<collection property="likes" column="tc_id" ofType="org.spring.china.base.pojo.TopicCommentLike">
+			<id property="id" column="tcl_id"/>
+			<result property="userId" column="tcl_userId"/>
+			<result property="createdAt" column="tcl_createdAt"/>
+		</collection>	
+		
+		<collection property="tos" column="tc_id" ofType="org.spring.china.base.pojo.TopicCommentTo">
+			<id property="id" column="tct_id"/>
+			<result property="userId" column="tct_userId"/>
+			<result property="createdAt" column="tct_createdAt"/>
+		</collection>	
+		
+    </resultMap>
+    
+    <resultMap type="org.spring.china.base.pojo.TopicLike" id="rmLike">
+    	<id property="id" column="id"/>
+		<result property="topicId" column="topicId"/>
+		<result property="userId" column="userId"/>
+		<result property="createdAt" column="createdAt"/>
+		<association property="user" column="userId" javaType="org.spring.china.base.pojo.User">
+    		<id property="id" column="userId"/>
+    		<result property="avatar" column="u_avatar"/>
+    		<result property="nickName" column="u_nickName"/>
+    	</association>
+    </resultMap>
+    
+    <!-- 关联查询 -->
+    <select id="selectTags" parameterType="long" resultType="org.spring.china.base.pojo.Tag">
+    	select * from tag tg
+    	join tag_topic_rel ttr
+    	on(tg.id=ttr.tagId and ttr.topicId=#{topicId} and ttr.status=1)
+    	where tg.status=1
+    </select>
+    
+    <!-- 关联查询 -->
+    <select id="selectLikes" parameterType="Long" resultMap="rmLike">
+    	select tl.*,
+    	u.avatar as u_avatar,
+    	u.nickName as u_nickName
+    	from topic_like tl
+		join user u
+		on(tl.userId=u.id)
+		where u.verified=1 and tl.topicId=#{topicId}
+    </select>
+    
+    
+    
+
+    <insert id="addTopic" parameterType="org.spring.china.base.pojo.Topic" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[
+            insert into topic(categoryId,userId,title,content,status,contentHtml)
+                    values(#{categoryId},#{userId},#{title},#{content},#{status},#{contentHtml})
+        ]]>
+    </insert>
+
+    <select id="queryAllCategories" parameterType="Map" resultType="org.spring.china.base.pojo.Category">
+         <![CDATA[
+            select * from category
+        ]]>
+    </select>
+
+    <select id="queryTopicsPagely" parameterType="Map" resultMap="rmTopic">
+         select
+         t.id as topic_id,
+         t.createdAt as topic_createdAt,
+         t.updatedAt as topic_updatedAt,
+         t.categoryId as topic_categoryId,
+         t.userId as topic_userId,
+         t.title as topic_title,
+         t.content as topic_content,
+         t.status as topic_status,
+         t.isTop as topic_isTop,
+         t.viewCount as topic_viewCount,
+         t.contentHtml as topic_contentHtml,
+         t.isDigest as topic_isDigest,
+         t.likeCount as topic_likeCount,
+         t.commentCount as topic_commentCount,
+         u.nickName as user_nickName,
+         u.avatar as user_avatar,
+         c.name as category_name,
+         c.code as category_code
+         from topic t
+         join user u
+         on(u.id=t.userId)
+         join category c
+         on(c.id=t.categoryId)
+         where u.verified=1
+         <if test="title != null">
+         	and t.title like '%${title}%'
+         </if>
+         <if test="status !=null">
+         	and t.status=#{status}
+         </if>
+         order by t.isTop desc,
+         <if test="filter != null and filter == 1">
+         	t.commentCount desc,
+         </if>
+         <if test="filter != null and filter == 2">
+         	t.isDigest desc,
+         </if>
+         t.createdAt desc
+         limit ${(page-1)*pageSize},${pageSize}
+    </select>
+
+    <select id="queryTopicCounts" parameterType="Map" resultType="java.lang.Integer">    
+         select count(*) from topic t where t.status=#{status}
+         <if test="title != null">
+         	and t.title like '%${title}%'
+         </if>     
+    </select>
+    
+    <select id="queryTopicById" parameterType="Map" resultMap="rmTopic">
+        select
+        t.id as topic_id,
+        t.createdAt as topic_createdAt,
+        t.updatedAt as topic_updatedAt,
+        t.categoryId as topic_categoryId,
+        t.userId as topic_userId,
+        t.title as topic_title,
+        t.content as topic_content,
+        t.status as topic_status,
+        t.isTop as topic_isTop,
+        t.viewCount as topic_viewCount,
+        t.contentHtml as topic_contentHtml,
+        t.isDigest as topic_isDigest,
+        t.likeCount as topic_likeCount,
+        t.commentCount as topic_commentCount,
+        u.nickName as user_nickName,
+        u.signature as user_signature,
+        u.avatar as user_avatar,
+        c.name as category_name,
+        c.description as category_description,
+        <if test="userId !=null">
+	  		(select count(*) from topic_like where topicId=t.id and userId=#{userId}) as topic_liked,
+	  	</if>
+        c.code as category_code
+        from topic t
+        join user u
+        on(u.id=t.userId)
+        join category c
+        on(c.id=t.categoryId)
+        where t.id=#{id}
+ 
+    </select>
+    
+    <update id="editTopic" parameterType="org.spring.china.base.pojo.Topic">
+       	update topic set 
+       	<if test="categoryId != null">
+       		categoryId=#{categoryId},
+       	</if>
+       	<if test="status != null">
+       		status=#{status},
+       	</if>      	
+       	title=#{title},
+       	content=#{content},
+       	contentHtml=#{contentHtml},
+       	updatedAt =#{updatedAt}       	
+		where id=#{id}
+    </update>
+    
+    <select id="checkTopicIsMine" parameterType="Map" resultType="int">
+    	select count(*) from topic where userId=#{userId} and id=#{id}
+    </select>
+    
+    <select id="queryTopicCommentsPagely" parameterType="Map" resultMap="rmTopicComment">
+    	select 
+    	tc.id as tc_id,
+    	tc.userId as tc_userId,
+    	tc.createdAt as tc_createdAt,
+    	tc.updatedAt as tc_updatedAt,
+    	tc.topicId as tc_topicId,
+    	tc.content as tc_content,
+    	tc.contentHtml as tc_contentHtml,
+    	tc.isTop as tc_isTop,
+    	tc.likeCount as tc_likeCount,
+    	tc.status as tc_status,
+    	<if test="userId !=null">
+	    	(select count(*) from topic_comment_like where commentId=tc.id and userId=#{userId}) as tc_liked,
+	    </if>
+    	u.id as user_id,
+    	u.nickName as user_nickName,
+    	u.avatar as user_avatar
+    	from topic_comment tc
+    	join user u
+    	on(u.id=tc.userId)
+    	where tc.topicId=#{id} and tc.status=1
+		order by tc.createdAt asc
+		limit ${(page-1)*pageSize},${pageSize}
+    </select>
+    
+    <select id="queryTopicCommentsCounts" parameterType="Map" resultType="int">
+    	select count(*) from topic_comment tc where tc.topicId=#{id} and tc.status=1
+    </select>
+    
+    <insert id="addTopicLike" parameterType="org.spring.china.base.pojo.TopicLike" useGeneratedKeys="true" keyProperty="id">
+    	insert into topic_like(userId,topicId)values(#{userId},#{topicId})
+    </insert>
+    
+    <delete id="delTopicLike" parameterType="org.spring.china.base.pojo.TopicLike">
+    	delete from topic_like where userId=#{userId} and topicId=#{topicId}
+    </delete>
+    
+    <insert id="addTopicComment" parameterType="org.spring.china.base.pojo.TopicComment" useGeneratedKeys="true" keyProperty="id">
+    	insert into topic_comment(userId,topicId,content,contentHtml)values(#{userId},#{topicId},#{content},#{contentHtml})
+    </insert>
+   
+    <update id="updateTopicCommentStatus" parameterType="Map">
+    	update topic_comment 
+    	set status=#{status}
+    	where id=#{id}
+    </update>
+    
+    <insert id="addTopicCommentLike" parameterType="org.spring.china.base.pojo.TopicCommentLike" useGeneratedKeys="true" keyProperty="id">
+    	insert into topic_comment_like(userId,commentId)values(#{userId},#{commentId})
+    </insert>
+    
+    <delete id="delTopicCommentLike" parameterType="org.spring.china.base.pojo.TopicCommentLike">
+    	delete from topic_comment_like where commentId=#{commentId} and userId=#{userId}
+    </delete>
+    
+    
+    <select id="checkTopicLikeExist" parameterType="org.spring.china.base.pojo.TopicLike" resultType="int">
+    	select count(*) from topic_like where userId=#{userId} and topicId=#{topicId}
+    </select>
+    
+    <select id="checkTopicCommentLikeExist" parameterType="org.spring.china.base.pojo.TopicCommentLike" resultType="int">
+    	select count(*) from topic_comment_like where userId=#{userId} and commentId=#{commentId}
+    </select>
+    
+    <update id="editTopicCommentCount" parameterType="Map">
+    	update topic set
+		commentCount=(select count(*) from topic_comment where topicId=#{id} and status=1)
+		where id=#{id}
+    </update>
+    
+    
+    <update id="editTopicLikeCount" parameterType="Map">
+    	update topic set
+    	likeCount=(select count(*) from topic_like where topicId=#{id})
+    	where id=#{id}
+    </update>
+    
+    <update id="editTopicCommentLikeCount" parameterType="Map">
+    	update topic_comment set
+    	likeCount=(select count(*) from topic_comment_like where commentId=#{id})
+    	where id=#{id}
+    </update>
+    
+    <select id="queryTopicComment" parameterType="Map" resultMap="rmTopicComment">
+    	select 
+    	tc.id as tc_id,
+    	tc.userId as tc_userId,
+    	tc.createdAt as tc_createdAt,
+    	tc.updatedAt as tc_updatedAt,
+    	tc.topicId as tc_topicId,
+    	tc.content as tc_content,
+    	tc.contentHtml as tc_contentHtml,
+    	tc.isTop as tc_isTop,
+    	tc.likeCount as tc_likeCount,
+    	tc.status as tc_status,
+    	<if test="userId !=null">
+	    	(select count(*) from topic_comment_like where commentId=tc.id and userId=#{userId}) as tc_liked,
+	    </if>
+	    tct.id as tct_id,
+	    tct.userId as tct_userId,
+	    tct.createdAt as tct_createdAt,
+    	u.id as user_id,
+    	u.nickName as user_nickName,
+    	u.avatar as user_avatar
+    	from topic_comment tc
+    	join user u
+    	on(u.id=tc.userId)
+    	left join topic_comment_to tct
+    	on(tct.commentId=tc.id)
+    	where tc.id=#{id}
+    </select>
+    
+    <select id="queryTopicCommentedUsers" parameterType="Map" resultType="org.spring.china.base.pojo.User">
+    	select DISTINCT
+		u.id,
+		u.userName,
+		u.nickName
+		from topic_comment tc
+		join user u
+		on(u.id=tc.userId)
+		where tc.topicId=#{id}
+		<if test="userId !=null">
+	    	and u.id !=#{userId}
+	    </if>
+    </select>
+    
+    <update id="editTopicStatus" parameterType="Map">
+    	update topic set
+    	status=#{status}
+    	where id=#{id}
+    </update>
+    
+    <update id="editTopicViewCount" parameterType="Map">
+    	update topic set
+    	viewCount=viewCount+1
+    	where id=#{id}
+    </update>
+    
+    <insert id="addTopicCommentTo" parameterType="org.spring.china.base.pojo.TopicCommentTo" useGeneratedKeys="true" keyProperty="id">
+    	insert into topic_comment_to(commentId,userId)
+    		values(#{commentId},#{userId})
+    </insert>
+    
+    <select id="queryTopicCommentIndex" parameterType="Map" resultType="int">    
+    	<![CDATA[
+    		select count(*) 
+	    	from topic_comment tc
+	    	where tc.topicId=#{topicId} and tc.id <= #{commentId}
+	    	order by tc.createdAt asc
+     	]]>  	
+    </select>
+    
+    <select id="checkTopicIsOwnComment" parameterType="Map" resultType="int">
+    	select count(*)
+    	from topic_comment tc
+    	where tc.id=#{commentId} and tc.topicId=#{topicId}
+    </select>
+    
+    <update id="editTopicCommentReaded" parameterType="Map">
+        update topic_comment 
+        set readed=#{readed}
+        where id=#{id}
+    </update>
+    
+    <update id="editTopicLikeReaded" parameterType="Map">
+    	update topic_like
+    	set readed=#{readed}
+    	where id=#{id}
+    </update>
+    
+    <update id="editTopicCommentLikeReaded" parameterType="Map">
+    	update topic_comment_like
+    	set readed=#{readed}
+    	where id=#{id}
+    </update>
+    
+    <update id="editTopicCommentToReaded" parameterType="Map">
+    	update topic_comment_to
+    	set readed=#{readed}
+    	where id=#{id}
+    </update>
+    
+    <select id="checkUserHasAuthEditTopicCommentReaded" parameterType="Map" resultType="int">
+    	select count(*) 
+    	from topic_comment tc
+    	join topic t
+    	on(t.id=tc.topicId)
+    	where t.userId=#{userId} and tc.id=#{id}
+    </select>
+    
+    <select id="checkUserHasAuthEditTopicLikeReaded" parameterType="Map" resultType="int">
+    	 select count(*)
+    	 from topic_like tl
+    	 join topic t
+    	 on(t.id=tl.topicId)
+    	 where t.userId=#{userId} and tl.id=#{id}
+    </select>
+    
+    <select id="checkUserHasAuthEditTopicCommentLikeReaded" parameterType="Map" resultType="int">
+    	select count(*) 
+    	from topic_comment_like tcl
+    	join topic_comment tc
+    	on(tc.id=tcl.commentId)
+    	where tc.userId=#{userId} and tcl.id=#{id}
+    </select>
+    
+    <select id="checkUserHasAuthEditTopicCommentToReaded" parameterType="Map" resultType="int">
+    	select count(*) 
+    	from topic_comment_to tct
+    	where tct.userId=#{userId} and tct.id=#{id}
+    </select>
+    
+    <select id="queryTopicCommentReadedStatus" parameterType="Map" resultType="int">
+    	select count(*) 
+    	from topic_comment tc
+    	where tc.id=#{id} and tc.readed=#{readed}
+    </select>
+    
+    <select id="queryTopicCommentToReadedStatus" parameterType="Map" resultType="int">
+    	select count(*) 
+    	from topic_comment_to tct
+    	where tct.id=#{id} and tct.readed=#{readed}
+    </select>
+    
+    <select id="queryTopicLikeReadedStatus" parameterType="Map" resultType="int">
+    	select count(*) 
+    	from topic_like tl
+    	where tl.id=#{id} and tl.readed=#{readed}
+    </select>
+    
+    <select id="queryTopicCommentLikeReadedStatus" parameterType="Map" resultType="int">
+    	select count(*) 
+    	from topic_comment_like tcl
+    	where tcl.id=#{id} and tcl.readed=#{readed}
+    </select>
+    
+    <select id="queryTopicByCommentId" parameterType="Map" resultMap="rmTopic">
+ 
+        select
+        t.id as topic_id,
+        t.createdAt as topic_createdAt,
+        t.updatedAt as topic_updatedAt,
+        t.categoryId as topic_categoryId,
+        t.userId as topic_userId,
+        t.title as topic_title,
+        t.content as topic_content,
+        t.status as topic_status,
+        t.isTop as topic_isTop,
+        t.viewCount as topic_viewCount,
+        t.contentHtml as topic_contentHtml,
+        t.isDigest as topic_isDigest,
+        t.likeCount as topic_likeCount,
+        t.commentCount as topic_commentCount,
+        u.nickName as user_nickName,
+        u.signature as user_signature,
+        u.avatar as user_avatar,
+        c.name as category_name,
+        c.description as category_description,
+        c.code as category_code,
+        <if test="userId !=null">
+	  		(select count(*) from topic_like where topicId=t.id and userId=#{userId}) as topic_liked,
+	  	</if>
+	  	tl.id as tl_id,
+	  	tl.topicId as tl_topicId,
+	  	tl.userId as tl_userId,
+	  	tl.createdAt as tl_createdAt,
+	  	utl.avatar as tl_user_avatar,
+	  	utl.nickName as tl_user_nickName
+        from topic t
+        join user u
+        on(u.id=t.userId)
+        join category c
+        on(c.id=t.categoryId)
+        left join topic_like tl
+        on(tl.topicId=t.id)
+        left join user utl
+        on(utl.id=tl.userId)
+        where t.id=(select topicId from topic_comment where id=#{id})
+ 
+    </select>
+    
+    
+    <select id="checkTopicIsDeleted" parameterType="Map" resultType="int">
+    	select count(*) from topic where id=#{id} and status=#{status}
+    </select>   
+
+    <insert id="addTagTopicRel" parameterType="org.spring.china.base.pojo.TagTopicRel" useGeneratedKeys="true" keyProperty="id">
+  		insert into tag_topic_rel(tagId,topicId) values(#{tagId}, #{topicId})
+    </insert>
+
+    <delete id="delTagTopicRel" parameterType="Map">
+  		delete from tag_topic_rel where tagId=#{tagId} and topicId=#{topicId}
+    </delete>
+
+	<select id="queryTopicTags" parameterType="Map" resultType="org.spring.china.base.pojo.Tag">
+		select 
+		tg.*
+		from tag tg
+		join tag_topic_rel ttr
+		on(tg.id=ttr.tagId and ttr.topicId=#{topicId})
+		where tg.status=1 and tg.userId=#{userId}
+		order by tg.createdAt desc
+	</select>
+	
+	<select id="checkTopicIsInTag" parameterType="Map" resultType="int">
+		select count(*) from tag_topic_rel where tagId=#{tagId} and topicId=#{topicId}
+	</select>
+    
+ 
+    
+</mapper>

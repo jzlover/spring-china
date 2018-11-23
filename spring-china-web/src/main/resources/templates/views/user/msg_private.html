@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout_msg">
+ <head>
+ 	<title>私信</title>
+ 	<link rel="stylesheet" th:href="@{/content/css/user_msg_private.css}"/>
+ </head>
+  <body>
+      <div layout:fragment="content">
+ 
+      		<div class="panel panel-default">
+      		  <div class="panel-heading">
+      		  	<label>私信 </label>
+      		  </div>
+		      <div class="panel-body" id="msg-container">
+		      	
+		      </div>
+		      <div id="pagination" class="pagination" th:if="${msgCommentCount>0}"></div>
+		    </div>
+ 
+      </div>
+      
+      <div layout:fragment="scripts">
+      	<script th:src="@{/content/js/user_msg_private.js}"></script>
+      	<input id="hidden_msgCount" type="hidden" th:value="${msgCount}"/>
+      </div>
+  </body>
+</html>

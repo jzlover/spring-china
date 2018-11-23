@@ -1,0 +1,29 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout_home">
+ <head>
+  	<title>个人中心-草稿箱</title>
+  	<link rel="stylesheet" th:href="@{/content/css/user_draft.css}"/>
+  </head>
+  <body>
+      <div layout:fragment="content">
+        <div class="panel panel-default">
+  		  <div class="panel-heading">
+  		  	<label>我的草稿箱</label>
+  		  	<a href="" th:href="@{/user/home}" class="pull-right">个人中心</a>
+  		  </div>
+	      <div class="panel-body" id="topic-drafts-container">
+      		<div id="topic-drafts-pagination" class="pagination" th:if="${modelTopicDrafts.counts>0}"></div>
+	      </div>
+	    </div>
+      </div>
+      
+      <div layout:fragment="scripts">
+      	<script th:src="@{/content/js/user_draft.js}"></script>
+      	<input id="hidden_userId" type="hidden" th:value="${user.id}"/>
+      	<input id="hidden_tagId" type="hidden" th:if="${selTag!=null}" th:value="${selTag.id}"/>
+      	<input id="hidden_topic_draft_page" type="hidden" th:value="${modelTopicDrafts.page}"/>
+    	<input id="hidden_topic_draft_perPageCount" type="hidden" th:value="${modelTopicDrafts.pageSize}"/>
+    	<input id="hidden_topic_draft_counts" type="hidden" th:value="${modelTopicDrafts.counts}"/>
+
+      </div>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+	<title>社区</title>
+	<link rel="stylesheet" th:href="@{/content/css/root_topics.css}"/>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="col-md-9">
+    	   <div class="panel panel-default">
+    	   	<div class="panel-heading">
+    	   		<ul class="list-inline topic-filter pull-left">
+    	   			<li><a href="/topics" th:classappend="${filter==null}? 'active'">最近</a></li>
+    	   			<li><a href="/topics?filter=1" th:classappend="${filter==1}? 'active'">活跃</a></li> 
+    	   			<li><a href="/topics?filter=2" th:classappend="${filter==2}? 'active'">精华</a></li>   	   			
+    	   		</ul>
+    	   		<div class="pull-right">
+    	   			<input type="text" id="txt-search" class="form-control" th:value="${title}" placeholder="输入关键字搜索..."/>
+    	   		</div>
+    	   		<div class="clearfix"></div>
+    	   	</div>
+	      	<div class="panel-body" id="topics-container">
+	      		<div class="media" th:each="t : ${model.data}" th:attr="data-uId=${t.userId},data-nickName=${t.user.nickName},data-avatar=${t.user.avatarSmall}">
+	      			<div class="media-left avatar-wrapper">
+	      				<a href="/user/home/1" th:href="@{'/user/home?id='+${t.userId}}">
+   				 			<img alt="头像" th:src="${t.user.avatarSmall}" class="avatar"/>
+   				 		</a> 
+	      			</div>
+	      			<div class="media-body">
+	      				<span th:if="${t.isTop}" class="hidden-xs label label-warning">置顶</span>
+	      				<span th:if="${t.category.code=='C1'}" class="hidden-xs label label-default">原创</span>
+	      				<span th:if="${t.category.code=='C2'}" class="hidden-xs label label-default">分享</span>
+	      				<span th:if="${t.category.code=='C3'}" class="hidden-xs label label-default">回答</span>
+	      				<span th:each="tag:${t.tags}" th:text="${tag.title}" class="badge"></span>
+	      				<a href="/" th:href="@{'/topic/show/'+${t.id}}" th:text="${t.title}"></a>
+	      				<div class="pull-right topic-info">
+	      					<span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <span th:text="${t.commentCount}">1</span>
+	      					<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <span th:text="${t.viewCount}">2</span>
+	      					<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> <span th:text="${t.likeCount}">2</span>
+	      					<span class="glyphicon glyphicon-time" aria-hidden="true"></span> <span th:text="${t.createdAtFormat}">1</span>
+	      				</div>
+	      			</div>
+	      		</div>
+	      		<div class="blogs-footer">
+	      			<div class="pagination"></div>
+	      		</div>
+	      	</div>
+    	   </div>
+      	</div>
+      	<div class="col-md-3">     
+      		<div id="root-right">
+      			<div class="panel panel-default" >
+	    			<div class="panel-body" style="padding:0;">
+	    				 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+						  <!-- Indicators -->
+						  <ol class="carousel-indicators" style="bottom:0px;">
+						    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+						    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+						    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+						  </ol>
+						
+						  <!-- Wrapper for slides -->
+						  <div class="carousel-inner" role="listbox">
+						    <div class="item active">
+						      <img src="辉昂" alt="..." th:src="@{'/system/images/banner/pic1.jpg'}" style="width:100%"/>
+						      <div class="carousel-caption" style="bottom:0px;">
+						          	 风景1
+						      </div>
+						    </div>
+						    <div class="item">
+						      <img alt="途昂" th:src="@{'/system/images/banner/pic2.jpg'}" style="width:100%"/>
+						      <div class="carousel-caption" style="bottom:0px;">
+						        	风景2
+						      </div>
+						    </div>
+						    <div class="item">
+						      <img alt="途观L" th:src="@{'/system/images/banner/pic3.jpg'}" style="width:100%"/>
+						      <div class="carousel-caption" style="bottom:0px;">
+						        	风景3
+						      </div>
+						    </div>
+						    <div class="item">
+						      <img alt="途观L" th:src="@{'/system/images/banner/pic4.jpg'}" style="width:100%"/>
+						      <div class="carousel-caption" style="bottom:0px;">
+						        	风景4
+						      </div>
+						    </div>
+						  </div>
+						</div>
+	    			</div>
+	    		</div>
+				<div class="panel panel-default" id="panel-hot-tags">
+					<div class="panel-heading">
+						<label>热门标签</label>
+					</div>
+					<div class="panel-body" th:if="${modelTags.code==0}">
+						<a th:each="tag:${modelTags.data}" class="badge" th:text="${tag.title}" th:href="@{/user/home(id=${tag.user.id},tagId=${tag.id})}"></a>
+					</div>
+				</div>
+      		</div>
+    		
+		</div>
+    </div>
+    <div layout:fragment="scripts">
+    	<script th:src="@{/content/js/root_topics.js}"></script>
+    	<input id="hidden_page" type="hidden" th:value="${model.page}"/>
+    	<input id="hidden_perPageCount" type="hidden" th:value="${model.pageSize}"/>
+    	<input id="hidden_counts" type="hidden" th:value="${model.counts}"/>
+    	<input id="hidden_filter" type="hidden" th:value="${filter}"/>
+    	<input id="hidden_title" type="hidden" th:if="${title!=null}" th:value="${title}"/>
+    </div>
+ 
+</body>
+</html>

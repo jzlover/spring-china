@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="htmlhead">
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <meta name="description" content=""></meta>
+    <meta name="author" content=""></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"></meta>
+    <link rel="icon" href="/img/icon.ico" type="image/x-icon" />
+   	<title>Spring China 中文社区</title>
+   	<link th:replace="fragments/common/common_css :: common_css"/>
+   	<link rel="stylesheet" th:href="@{/content/css/layout/layout_msg.css}"/>
+  </head>
+
+  <body>
+  	<div th:replace="fragments/header :: header">Header</div>
+    <div th:fragment="body" class="container">		
+		<div class="row">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+	      			<div class="panel-body user-setting-left-panel">
+	      				<ul class="list-group">
+	      					<li class="list-group-item" th:classappend="${viewName=='user_msg_comment'}? 'active'"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <a href="/user/msg-comment">用户评论</a></li>
+	      					<li class="list-group-item" th:classappend="${viewName=='user_msg_sys'}? 'active'"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> <a href="/user/msg-sys">系统消息</a></li>
+	      					<li class="list-group-item" th:classappend="${viewName=='user_msg_private'}? 'active'"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href="/user/msg-private">私信</a></li>
+	      				</ul>
+	      			</div>
+	      		</div>
+			</div>
+			<div layout:fragment="content" class="col-md-9"></div>
+		</div>
+		
+    </div>
+    <div th:replace="fragments/footer :: footer">footer</div>
+    
+   	<script th:replace="fragments/common/common_js :: common_js"></script>
+   
+ 	<div layout:fragment="scripts" class="hidden">
+ 	</div>
+    
+    
+   </body>
+</html>

@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout_msg">
+ <head>
+ 	<title>消息中心</title>
+ 	<link rel="stylesheet" th:href="@{/content/css/user_msg_comment.css}"/>
+ </head>
+  <body>
+      <div layout:fragment="content">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		  	<label>消息 </label>
+		  	<div th:if="${showType==0}" class="btn-group" role="group" aria-label="...">		  	  
+			  <a href="/user/msg-comment?show_type=0" class="btn btn-xs btn-primary">全   部</a>
+			  <a href="/user/msg-comment?show_type=1" class="btn btn-xs btn-default">未读取</a>
+			  <a href="/user/msg-comment?show_type=2" class="btn btn-xs btn-default">已读取</a>
+			</div>
+			<div th:if="${showType==1}" class="btn-group" role="group" aria-label="...">		  	  
+			  <a href="/user/msg-comment?show_type=0" class="btn btn-xs btn-default">全   部</a>
+			  <a href="/user/msg-comment?show_type=1" class="btn btn-xs btn-primary">未读取</a>
+			  <a href="/user/msg-comment?show_type=2" class="btn btn-xs btn-default">已读取</a>
+			</div>
+			<div th:if="${showType==2}" class="btn-group" role="group" aria-label="...">		  	  
+			  <a href="/user/msg-comment?show_type=0" class="btn btn-xs btn-default">全   部</a>
+			  <a href="/user/msg-comment?show_type=1" class="btn btn-xs btn-default">未读取</a>
+			  <a href="/user/msg-comment?show_type=2" class="btn btn-xs btn-primary">已读取</a>
+			</div>
+		  </div>
+			<div class="panel-body" id="msg-container"></div>
+			<div id="pagination" class="pagination" th:if="${msgCommentCount>0}"></div>
+		</div>
+      </div>
+      
+      <div layout:fragment="scripts">
+      	<script th:src="@{/content/js/user_msg_comment.js}"></script>
+      	<input id="hidden_msgCommentCount" type="hidden" th:value="${msgCommentCount}"/>
+      	<input id="hidden_showType" type="hidden" th:value="${showType}"/>
+      </div>
+  </body>
+</html>

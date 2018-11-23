@@ -1,0 +1,31 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout_user_setting">
+<head>
+	<title>修改帐号绑定</title>
+	<link rel="stylesheet" th:href="@{/content/css/user_edit_account_binding.css}"/>
+</head>
+<body>
+    <div layout:fragment="content">
+    	<div class="panel panel-default">
+   			<div class="panel-body">
+				<h2>
+					<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+					<span>修改帐号绑定</span>					
+				</h2>
+				<hr/>
+				<div class="col-md-6">
+	 				<div class="form-group">
+					    <label>微信绑定</label>
+					    <button type="button" th:if="${wxBinded==true}" class="btn btn-default btn-xs" id="btn-unbind-wx">解除绑定</button>
+					    <button type="button" th:if="${wxBinded==false}" class="btn btn-default btn-xs" id="btn-bind-wx">绑定</button>
+					</div>
+				</div>
+   			</div>
+   		</div>
+    </div>
+    
+    <div layout:fragment="scripts">	
+    	<script th:src="@{/content/js/user_edit_account_binding.js}"></script> 
+    	<input id="hidden_userId" type="hidden" th:if="${session.userName!=null}" th:value="${session.userId}"/>
+    </div>
+</body>
+</html>

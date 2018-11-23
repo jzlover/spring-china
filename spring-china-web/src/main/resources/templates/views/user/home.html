@@ -1,0 +1,53 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout_home">
+ <head>
+  	<title>个人中心</title>
+  	<link rel="stylesheet" th:href="@{/content/css/user_home.css}"/>
+  </head>
+  <body>
+      <div layout:fragment="content">
+      	<ol class="breadcrumb" th:if="${selTag!=null}">
+		  <li>
+		  	<a href="" th:if="${mine==1}" th:href="@{/user/home}">个人中心</a>
+		   	<a href="" th:if="${mine!=1}" th:href="@{/user/home(id=${user.id})}">个人中心</a>
+		  </li>
+		  <li class="active" th:text="${selTag.title}">Data</li>
+		</ol>
+     		<div class="panel panel-default">
+     		  <div class="panel-heading">
+     		  	<label>专栏文章 </label>
+     		  	<a href="" th:if="${mine==1}" th:href="@{/user/draft}" class="pull-right">草稿箱</a>
+     		  </div>
+	      <div class="panel-body" id="topics-container">
+      		<div id="topic-pagination" class="pagination" th:if="${modelTopic.counts>0}"></div>
+	      </div>
+	    </div>
+	    
+	    <div class="panel panel-default">
+     		  <div class="panel-heading">
+     		  	<label>最近活动</label>
+     		  </div>
+	      <div class="panel-body" id="recent-activities">
+	      	
+			
+	      </div>
+	      <div style="text-align:center;">
+			<a href="javascript:;" id="a-load-more">加载更多</a>
+		  </div>
+	    </div>
+ 
+      </div>
+      
+      <div layout:fragment="scripts">
+      	<script th:src="@{/content/js/user_home.js}"></script>
+      	<input id="hidden_userId" type="hidden" th:value="${user.id}"/>
+      	<input id="hidden_tagId" type="hidden" th:if="${selTag!=null}" th:value="${selTag.id}"/>
+      	<input id="hidden_topic_page" type="hidden" th:value="${modelTopic.page}"/>
+    	<input id="hidden_topic_perPageCount" type="hidden" th:value="${modelTopic.pageSize}"/>
+    	<input id="hidden_topic_counts" type="hidden" th:value="${modelTopic.counts}"/>
+ 		
+ 		<input id="hidden_recent_activity_page" type="hidden" th:value="${modelRecentActivity.page}"/>
+    	<input id="hidden_recent_activity_perPageCount" type="hidden" th:value="${modelRecentActivity.pageSize}"/>
+    	<input id="hidden_recent_activity_counts" type="hidden" th:value="${modelRecentActivity.counts}"/>   	
+      </div>
+  </body>
+</html>

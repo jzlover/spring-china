@@ -1,0 +1,79 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+  <head>
+  	<title th:if="${type=='create'}">创建话题</title>
+  	<title th:if="${type=='edit'}">编辑话题</title>
+  	
+  	<link rel="stylesheet" th:href="@{/content/css/topic_create_edit.css}"/>
+  </head>
+  <body>
+      <div layout:fragment="content">
+      	<div class="col-md-9">     
+      		<div class="panel panel-default">
+      			<div class="panel-body">
+      				<h2 class="text-center" th:switch="${type}">
+      					<span th:case="'create'">创建话题</span>
+      					<span th:case="'edit'">编辑话题</span>
+      				</h2>
+			      	<hr/>
+			      	
+			      	<div th:switch="${type}">
+			      		<input th:case="'edit'" type="text" class="form-control" placeholder="请填写标题" id="topic-title" th:value="${topic.title}"/>
+			      		<input th:case="'create'" type="text" class="form-control" placeholder="请填写标题" id="topic-title"/>
+			      	</div>
+			      	
+			      	
+			 		<div>
+			 			<label>选择类别：</label>
+			 			<select id="sel-category" class="form-control">
+			 				<option th:if="${type=='edit'}" th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id==topic.categoryId}"></option>
+			 				<option th:if="${type=='create'}" th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+			 			</select>
+			 		</div>
+			 		
+			 		<div>
+			 			<label>选择标签：</label>
+			 			<div class="tags">
+			 				<span th:each="tag:${tags}" th:text="${tag.title}" th:attr="data-id=${tag.id}" th:class="${tag.selected?'badge tag sel':'badge tag'}"></span>
+			 			</div>
+			 		</div>
+			 		
+			 		<div th:switch="${type}">
+			 			<textarea th:case="'edit'" id="simplemde" name="simplemde" placeholder="请输入话题内容..." th:text="${topic.content}"></textarea>
+			 			<textarea th:case="'create'" id="simplemde" name="simplemde" placeholder="请输入话题内容..."></textarea>
+			 		</div>
+			      	
+					
+					<div th:switch="${type}">
+						<button th:case="'create'" type="button" id="publish" class="btn btn-primary">发布</button>
+						<button th:case="'edit'" type="button" id="publish" class="btn btn-primary">编辑</button>
+						or
+						<a href="javascript:;" id="save-to-draft">保存为草稿</a>
+					</div>
+      			</div>
+      		</div>
+	      	
+		</div>
+		<div class="col-md-3">
+      	   <div class="panel panel-warning help-box">
+		      <div class="panel-heading text-center">
+		        <h3 class="panel-title">请自觉遵守以下规定</h3>
+		      </div>
+		      <div class="panel-body">
+		        <ul class="list">
+		          <li>请传播美好的事物，这里拒绝低俗、诋毁、谩骂等相关信息</li>
+		          <li>请尽量分享技术相关的话题，谢绝发布社会, 政治等相关新闻</li>
+		          <li>这里绝对不讨论任何有关盗版软件、音乐、电影如何获得的问题</li>
+		      </ul></div>
+		    </div>
+        </div>
+      </div>
+      
+      <div layout:fragment="scripts">
+      	<script th:src="@{/content/js/topic_create_edit.js}"></script>     	
+      	<input id="hidden_type" type="hidden" th:value="${type}"/>
+      	<input th:if="${type=='edit'}" id="hidden_topicId" type="hidden" th:value="${topic.id}"/>
+      	
+      </div>
+      
+  </body>
+</html>

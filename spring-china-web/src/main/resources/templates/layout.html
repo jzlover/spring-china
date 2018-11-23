@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+  <head th:fragment="htmlhead">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="icon" href="/img/icon.ico" type="image/x-icon" />
+   	<title >Spring China 中文社区</title>  	
+   	<link th:replace="fragments/common/common_css :: common_css"/>
+   	<link rel="stylesheet" th:href="@{/content/css/layout/layout.css}"/>
+  </head>
+  <body>
+  	<div th:replace="fragments/header :: header">Header</div>
+    <div th:fragment="body" class="container">		
+		<div layout:fragment="content" class="row"></div>		
+    </div>
+    <div th:replace="fragments/footer :: footer">footer</div>
+	
+	<script th:replace="fragments/common/common_js :: common_js"></script>
+	
+ 	<div layout:fragment="scripts" class="hidden">
+ 	</div>
+    
+    
+   </body>
+</html>

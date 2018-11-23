@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+  <head th:fragment="htmlhead">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="icon" href="/img/icon.ico" type="image/x-icon" />
+   	<title >Spring China 中文社区</title>  	
+   	<link th:replace="fragments/common/common_css :: common_css"/>
+   	<link rel="stylesheet" th:href="@{/content/css/layout/layout_home.css}"/>
+  </head>
+  <body>
+  	<div th:replace="fragments/header :: header">Header</div>
+    <div th:fragment="body" class="container">		  	
+		<div class="row">
+			<div class="col-md-3">
+	      		<div class="panel panel-default">
+			      <div class="panel-body user-basic-info">
+			      	<div class="image text-center">
+				        <a href="/" th:href="@{'/user/home?id='+${user.id}}">
+				        	<img alt="头像" th:src="${user.avatarNormal}" class="avatar"/>
+				        </a>
+				    </div>
+				    <div class="user-name text-center">
+				        <h4>
+				        	<a href="/" th:href="@{'/user/home?id='+${user.id}}" th:text="${user.nickName}"></a>
+				        </h4>
+				    </div>
+				    <div class="user-description text-center">
+				    	<p th:text="${user.signature}"></p>
+				    </div>
+				    
+				    <hr/>
+				    
+				    <div class="follow-info row">
+			            <div class="col-xs-4">
+			              <a class="counter" href="javascript:;">0</a>
+			              <a class="text" href="javascript:;">关注者</a>
+			            </div>
+			            <div class="col-xs-4">
+			                <a class="counter" href="javascript:;">0</a>
+			                <a class="text" href="javascript:;">讨论</a>
+			            </div>
+			            <div class="col-xs-4">
+			                <a class="counter" href="javascript:;" th:text="${user.topicStatusReleaseCounts}">0</a>
+			                <a class="text" href="javascript:;">文章</a>
+			            </div>
+			        </div>
+			        <hr/>		        
+			        <a type="button" th:href="@{/user/edit-profile}" class="btn btn-primary btn-edit-user-profile" th:if="${mine==1}">编辑个人资料</a>
+			        <a type="button" class="btn btn-primary btn-send-private-msg" th:if="${mine==2}" th:onclick="'utils.showChatDialog('+${user.id}+',\''+${user.nickName}+'\',\''+${user.avatarSmall}+'\');'">发送私信</a>		      	
+			      </div>
+			    </div>
+			    <div class="panel panel-default">
+			    	<div class="panel-heading">
+			    		<label>所有标签</label>			    		
+			    		<a th:if="${mine==1}" href="/user/tags?userId=3" th:href="@{/user/tags(userId=${user.id})}" class="pull-right">管理</a>
+			    	</div>
+			    	<div class="panel-body">
+				      	<ul id="all-tags">
+				      		<li th:each="tag : ${tags}">
+				      			<a href="" th:if="${mine==1}" th:href="@{/user/home(tagId=${tag.id})}" th:text="${tag.title}" class="badge"></a>
+				   				<a href="" th:if="${mine==2 || mine==0}" th:href="@{/user/home(id=${user.id},tagId=${tag.id})}" th:text="${tag.title}" class="badge"></a>
+				      		</li>
+				      	</ul>
+			    	</div>
+			    </div>
+			    <div class="panel panel-default">
+			    	<div class="panel-body">
+						ferwfewfwef
+			    	</div>
+			    </div>
+	      	</div>
+			<div layout:fragment="content" class="col-md-9"></div>
+		</div>
+				
+    </div>
+    <div th:replace="fragments/footer :: footer">footer</div>
+	
+	<script th:replace="fragments/common/common_js :: common_js"></script>
+	
+ 	<div layout:fragment="scripts" class="hidden">
+ 		
+ 	</div>
+    
+    
+   </body>
+</html>

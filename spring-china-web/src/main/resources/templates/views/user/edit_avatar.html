@@ -1,0 +1,34 @@
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout_user_setting">
+<head>
+	<title>编辑头像</title>
+	<link rel="stylesheet" th:href="@{/content/css/user_edit_avatar.css}"/>
+</head>
+<body>
+    <div layout:fragment="content">
+    	<div class="panel panel-default">
+   			<div class="panel-body">
+				<h2>
+					<span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+					<span>编辑头像</span>					
+				</h2>
+				<hr/>
+				
+				<div>				
+					<div id="avatarctrl">
+						<img src="/system/img/1.jpg" style="max-width: 100%;"/>
+					</div>
+				</div>
+				<div>
+					<input type="file" id="sel-avatar" accept="image/*"/>
+					<button type="button" class="btn btn-primary" id="save-avatar">保存</button>
+				</div>
+   			</div>
+   		</div>
+    </div>
+    
+    <div layout:fragment="scripts">
+    	<script th:src="@{/content/js/user_edit_avatar.js}"></script>    	
+    	<input id="hidden_userId" type="hidden" th:if="${session.userName!=null}" th:value="${session.userId}"/>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	
+	<footer th:fragment="footer" style="background-color:white;height:200px;">
+		<div th:if="${session.userName!=null}" id="i-chat">
+			<i class="c off">
+			</i>
+		</div>
+		<div class="container">
+			<div class="row">
+		 		<div class="col-md-6 mt-20">
+		 			<span>我们是SpringCloud开发者社区，致力于为SpringCloud微服务开发者提供一个分享创造、结识伙伴、协同互助的平台</span>
+		 			
+		 		</div>
+		 		<div class="col-md-6 mt-20">
+		 			<span class="pull-right">
+				 		@Spring China
+				    </span>
+				    <a href="http://www.miitbeian.gov.cn/">沪ICP备16023748号</a>
+		 		</div>
+		 	</div>
+		</div>
+		<input type="hidden" id="hiddenUserId" th:value="${session.userId}"/>
+		<input type="hidden" id="hiddenUserName" th:value="${session.userName}"/>
+		<input type="hidden" id="hiddenNickName" th:value="${session.nickName}"/>
+		<input type="hidden" id="hiddenAvatarSmall" th:value="${session.avatarSmall}"/>
+		<input type="hidden" id="hiddenPrivateMsgCount" th:value="${session.privateMsgCount}"/>
+	</footer>
+	
+	
+</body>
+</html>
+
